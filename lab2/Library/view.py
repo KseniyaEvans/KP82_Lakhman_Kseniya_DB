@@ -15,7 +15,7 @@ class Colors:
 class View:
     def print(self, data):
         columns, rows = data
-        lineLen = 40 * len(columns)
+        lineLen = 50 * len(columns)
 
         self.printSeparator(lineLen)
         self.printRow(columns)
@@ -27,7 +27,7 @@ class View:
 
     def printRow(self, row):
         for col in row:
-            print(f"{Colors.RED}" + str(col).rjust(30, ' ') + '   |' + "\x1b[0m", end='')
+            print(f"{Colors.RED}" + str(col).rjust(41, ' ') + '   |' + "\x1b[0m", end='')
         print('')
 
     def printSeparator(self, length):

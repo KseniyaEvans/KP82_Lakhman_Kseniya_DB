@@ -3,6 +3,7 @@ from model import Model
 from view import View
 from view import Colors
 from strings import Strings
+import time
 
 TABLES_NAMES = ['Authors', 'Authors_Books', 'Books', 'Genres', 'Members', 'Members_Books']
 TABLES = {
@@ -39,9 +40,9 @@ class Controller:
     def show_init_menu(self, msg=''):
         selectionMenu = SelectionMenu(
             TABLES_NAMES +
-            ['Find text where word is not included', 
-            'Find text by full phrase', 
-            'Fill "members" by random data (10 items)'], 
+            [ 'Fill "members" by random data (10 items)', 
+            'Find author or book by phrase',
+            'Find member by name or book'], 
             title='Select the table to work with | command:', subtitle=msg)
         
         selectionMenu.show()
@@ -50,12 +51,12 @@ class Controller:
         if index < len(TABLES_NAMES):
             tableName = TABLES_NAMES[index]
             self.show_entity_menu(tableName)
-        elif index == 7:
-            # self.fts_without_word()
-        elif index == 8:
-            # self.fts_phrase()
-        elif index == 9:
+        elif index == 6:
             self.fillByRandom()
+        elif index == 7:
+            self.find_book_or_author_by_phrase()
+        elif index == 8:
+            self.find_member_by_phrase()
         else:
             print('Bye, have a beautiful day!')
 
@@ -125,5 +126,31 @@ class Controller:
         try:
             self.model.fillMemberByRandomData()
             self.show_init_menu('Generated successfully')
+        except Exception as err:
+            self.show_init_menu(str(err))
+
+    def find_book_or_author_by_phrase(self):
+        try:
+            phrase = getInput('Enter phrase:')
+            start_time = time.time()
+            data = self.model.find_book_or_author_by_phrase(phrase)
+            request_time = time.time() - start_time
+            self.view.print(data)
+            print("Request completed in {0:.10f}ms".format(request_time))
+            pressEnter()
+            self.show_init_menu()
+        except Exception as err:
+            self.show_init_menu(str(err))
+
+    def find_member_by_phrase(self):
+        try:
+            phrase = getInput('Enter phrase:')
+            start_time = time.time()
+            data = self.model.find_member_by_phrase(phrase)
+            request_time = time.time() - start_time
+            self.view.print(data)
+            print("Request completed in {0:.10f}ms".format(request_time))
+            pressEnter()
+            self.show_init_menu()
         except Exception as err:
             self.show_init_menu(str(err))
